@@ -1,6 +1,6 @@
 # Remix Movie
 
-This app calls the [OMDB API](http://omdbapi.com).
+This app calls the [OMDB API](http://omdbapi.com). [Inspiration](https://twitter.com/asidorenko_/status/1469223565874577417)
 
 ## Quick Start
 
