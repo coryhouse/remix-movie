@@ -7,7 +7,7 @@ import {
   useLocation,
 } from "remix";
 
-type Movies = {
+type Movie = {
   imdbID: string;
   Title: string;
   Year: string;
@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     `http://www.omdbapi.com/?s=${searchParam}&apikey=${process.env.OMDB_API_KEY}`
   );
   const data = await result.json();
-  return (data.Search || []) as Movies[];
+  return (data.Search || []) as Movie[];
 };
 
 export const meta: MetaFunction = () => {
@@ -33,7 +33,7 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-  const movies = useLoaderData<Movies[]>();
+  const movies = useLoaderData<Movie[]>();
   const { search } = useLocation();
   const transition = useTransition();
   const searchTerm = search.split("=")[1];
