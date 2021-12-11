@@ -1,6 +1,13 @@
-# Welcome to Remix!
+# Remix Movie
 
-- [Remix Docs](https://remix.run/docs)
+This app calls the [OMDB API](http://omdbapi.com).
+
+## Quick Start
+
+1. Request an API key from [OMDB](http://www.omdbapi.com/apikey.aspx).
+2. Place the key in .env, in the project root
+3. `npm install`
+4. `npm run dev`
 
 ## Development
 
