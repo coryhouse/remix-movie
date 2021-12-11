@@ -6,7 +6,13 @@ import {
   Form,
 } from "remix";
 
-type;
+type MovieSearchResult = {
+  imdbID: string;
+  Title: string;
+  Year: string;
+  Type: string;
+  Poster: string;
+};
 
 // Loaders provide data to components and are only ever called on the server, so
 // you can connect to a database or run any server side code you want right next
@@ -26,13 +32,13 @@ export let loader: LoaderFunction = async ({ request }) => {
 export let meta: MetaFunction = () => {
   return {
     title: "Remix Movie",
-    description: "Welcome to remix Movies!",
+    description: "Welcome to Remix Movies!",
   };
 };
 
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
-  let data = useLoaderData();
+  let movies = useLoaderData<MovieSearchResult[]>();
   const transition = useTransition();
 
   return (
@@ -48,7 +54,9 @@ export default function Index() {
       <div className="results">
         {transition.state === "submitting"
           ? "Submitting..."
-          : data.map((item) => <img src={item.Poster} />)}
+          : movies.map((movie) => (
+              <img key={movie.imdbID} src={movie.Poster} />
+            ))}
       </div>
     </>
   );
