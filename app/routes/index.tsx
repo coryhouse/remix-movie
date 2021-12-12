@@ -7,12 +7,17 @@ import {
   useLocation,
 } from "remix";
 
-type Movie = {
+type MovieSearchResult = {
   imdbID: string;
   Title: string;
   Year: string;
   Type: string;
   Poster: string;
+};
+
+type Movie = {
+  id: string;
+  poster: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -22,7 +27,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     `http://www.omdbapi.com/?s=${searchParam}&apikey=${process.env.OMDB_API_KEY}`
   );
   const data = await result.json();
-  return data.Search || [];
+  return (
+    // Map Pascal-cased API response to leaner, camelCased response that only includes the fields used on the client.
+    data.Search.map((result: MovieSearchResult) => {
+      const movie: Movie = {
+        id: result.imdbID,
+        poster: result.Poster,
+      };
+      return movie;
+    }) || []
+  );
 };
 
 export const meta: MetaFunction = () => {
@@ -35,26 +49,20 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   const movies = useLoaderData<Movie[]>();
   const { search } = useLocation();
-  const transition = useTransition();
+  const { state } = useTransition();
   const searchTerm = search.split("=")[1];
 
   return (
     <>
-      <Form method="get">
-        <input
-          name="search"
-          type="search"
-          placeholder="Enter a movie"
-          defaultValue={searchTerm}
-        />
+      <Form method="get" style={{ display: "flex" }}>
+        <input name="search" type="search" defaultValue={searchTerm} />
+        <input type="submit" value="Search" />
       </Form>
       <section>
-        {transition.state === "submitting"
+        {state === "submitting"
           ? "Searching..."
-          : movies.map((movie) => (
-              <img key={movie.imdbID} src={movie.Poster} />
-            ))}
-        {transition.state === "idle" && movies.length === 0 && (
+          : movies.map(({ id, poster }) => <img key={id} src={poster} />)}
+        {state === "idle" && movies.length === 0 && (
           <p>No movies matching "{searchTerm}" found.</p>
         )}
       </section>
