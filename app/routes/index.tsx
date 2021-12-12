@@ -40,7 +40,7 @@ export default function Index() {
 
   return (
     <>
-      <Form method="get" action="/">
+      <Form method="get">
         <input
           name="search"
           type="search"
