@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     `http://www.omdbapi.com/?s=${searchParam}&apikey=${process.env.OMDB_API_KEY}`
   );
   const data = await result.json();
-  return (data.Search || []) as Movie[];
+  return data.Search || [];
 };
 
 export const meta: MetaFunction = () => {
