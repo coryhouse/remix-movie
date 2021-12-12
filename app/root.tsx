@@ -6,7 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch
+  useCatch,
 } from "remix";
 import type { LinksFunction } from "remix";
 
@@ -20,8 +20,8 @@ export let links: LinksFunction = () => {
     {
       rel: "stylesheet",
       href: darkStylesUrl,
-      media: "(prefers-color-scheme: dark)"
-    }
+      media: "(prefers-color-scheme: dark)",
+    },
   ];
 };
 
@@ -95,7 +95,7 @@ export function CatchBoundary() {
 
 function Document({
   children,
-  title
+  title,
 }: {
   children: React.ReactNode;
   title?: string;
@@ -124,22 +124,13 @@ function Layout({ children }: { children: React.ReactNode }) {
     <div className="remix-app">
       <header className="remix-app__header">
         <div className="container remix-app__header-content">
-          <Link to="/" title="Remix" className="remix-app__header-home-link">
+          <Link
+            to="/"
+            title="Remix Movies 🎥"
+            className="remix-app__header-home-link"
+          >
             <RemixLogo />
           </Link>
-          <nav aria-label="Main navigation" className="remix-app__header-nav">
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <a href="https://remix.run/docs">Remix Docs</a>
-              </li>
-              <li>
-                <a href="https://github.com/remix-run/remix">GitHub</a>
-              </li>
-            </ul>
-          </nav>
         </div>
       </header>
       <div className="remix-app__main">
