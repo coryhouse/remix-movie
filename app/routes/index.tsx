@@ -23,20 +23,18 @@ type Movie = {
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const searchParam = url.searchParams.get("search");
-  const result = await fetch(
-    `http://www.omdbapi.com/?s=${searchParam}&apikey=${process.env.OMDB_API_KEY}`
-  );
-  const data = await result.json();
-  return (
-    // Map Pascal-cased API response to leaner, camelCased response that only includes the fields used on the client.
-    data.Search.map((result: MovieSearchResult) => {
-      const movie: Movie = {
-        id: result.imdbID,
-        poster: result.Poster,
-      };
-      return movie;
-    }) || []
-  );
+  const apiUrl = `http://www.omdbapi.com/?s=${searchParam}&apikey=${process.env.OMDB_API_KEY}`;
+  const result = await fetch(apiUrl);
+  const { Search } = await result.json();
+  if (!Search) return [];
+  // Map Pascal-cased API response to leaner, camelCased response that only includes the fields used on the client.
+  return Search.map((result: MovieSearchResult) => {
+    const movie: Movie = {
+      id: result.imdbID,
+      poster: result.Poster,
+    };
+    return movie;
+  });
 };
 
 export const meta: MetaFunction = () => {
@@ -51,7 +49,6 @@ export default function Index() {
   const { search } = useLocation();
   const { state } = useTransition();
   const searchTerm = search.split("=")[1];
-
   return (
     <>
       <Form method="get" style={{ display: "flex" }}>
@@ -59,11 +56,11 @@ export default function Index() {
         <input type="submit" value="Search" />
       </Form>
       <section>
-        {state === "submitting"
-          ? "Searching..."
-          : movies.map(({ id, poster }) => <img key={id} src={poster} />)}
-        {state === "idle" && movies.length === 0 && (
+        {state === "submitting" && "Searching..."}
+        {state === "idle" && searchTerm && movies.length === 0 ? (
           <p>No movies matching "{searchTerm}" found.</p>
+        ) : (
+          movies.map(({ id, poster }) => <img key={id} src={poster} />)
         )}
       </section>
     </>
