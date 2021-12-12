@@ -20,28 +20,28 @@ type Movie = {
   poster: string;
 };
 
+export const meta: MetaFunction = () => {
+  return {
+    title: "Remix Movie",
+    description: "Welcome to Remix Movies!",
+  };
+};
+
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const searchParam = url.searchParams.get("search");
   const apiUrl = `http://www.omdbapi.com/?s=${searchParam}&apikey=${process.env.OMDB_API_KEY}`;
-  const result = await fetch(apiUrl);
-  const { Search } = await result.json();
-  if (!Search) return [];
+  const resp = await fetch(apiUrl);
+  const { data } = await resp.json();
+  if (!data.Search) return [];
   // Map Pascal-cased API response to leaner, camelCased response that only includes the fields used on the client.
-  return Search.map((result: MovieSearchResult) => {
+  return data.Search.map((result: MovieSearchResult) => {
     const movie: Movie = {
       id: result.imdbID,
       poster: result.Poster,
     };
     return movie;
   });
-};
-
-export const meta: MetaFunction = () => {
-  return {
-    title: "Remix Movie",
-    description: "Welcome to Remix Movies!",
-  };
 };
 
 export default function Index() {
