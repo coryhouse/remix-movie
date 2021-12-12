@@ -32,10 +32,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   const searchParam = url.searchParams.get("search");
   const apiUrl = `http://www.omdbapi.com/?s=${searchParam}&apikey=${process.env.OMDB_API_KEY}`;
   const resp = await fetch(apiUrl);
-  const { data } = await resp.json();
-  if (!data.Search) return [];
+  const { Search } = await resp.json();
+  if (!Search) return [];
   // Map Pascal-cased API response to leaner, camelCased response that only includes the fields used on the client.
-  return data.Search.map((result: MovieSearchResult) => {
+  return Search.map((result: MovieSearchResult) => {
     const movie: Movie = {
       id: result.imdbID,
       poster: result.Poster,
